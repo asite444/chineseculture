@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.favfield.FavfieldDAOInter"> 
+<!-- 등록 -->
+<insert id="create" parameterType="dev.mvc.favfield.FavfieldVO">
+  INSERT INTO favfield(favgrpno,favtitle,favex,rdate)
+    VALUES( #{favgrpno},#{favtitle},#{favex},now())
+  </insert>
+    <!-- 목록 -->
+    <select id="list_all" resultType="dev.mvc.favfield.FavfieldVO">
+    SELECT favno,favgrpno,favtitle,favex,rdate
+    FROM favfield
+    ORDER BY favno ASC
+  </select>
+  
+   <!-- 카테고리 그룹별 목록 -->
+  <select id="list_by_favgrpno" resultType="dev.mvc.favfield.FavfieldVO" parameterType="int">
+  SELECT favno,favgrpno,favtitle,favex,rdate
+  FROM favfield
+  WHERE favgrpno = #{favgrpno}
+  ORDER BY favno ASC;
+  </select>
+  
+  <!--favfieldgrp + favfield join, 연결 목록 -->
+  <select id="list_all_join" resultType="dev.mvc.favfield.Favfieldgrp_FavfieldVO">
+  SELECT r.favgrpno as r_favgrpno,r.favgrptitle AS r_favgrptitle,
+           c.favno, c.favgrpno,c.favtitle, c.favex, c.rdate
+  FROM favfieldgrp r, favfield c
+  WHERE r.favgrpno = c.favgrpno
+  ORDER BY favgrpno ASC, favno ASC;
+  </select>
+  
+  <!-- 조회, id: read, 입력: favno, 리턴: FavfieldVO -->
+  <select id="read" resultType="dev.mvc.favfield.FavfieldVO" parameterType="int">
+    SELECT favno,favgrpno,favtitle,favex,rdate
+    FROM favfield
+    WHERE favno=#{favno}
+  </select>
+ 
+   <!-- 수정, id: update, 입력: FavfieldVO, 리턴: int -->
+   <update id="update" parameterType="dev.mvc.favfield.FavfieldVO">
+   UPDATE favfield
+   SET favtitle=#{favtitle},favex=#{favex},favgrpno=#{favgrpno}
+   WHERE favno=#{favno}
+  </update> 
+  
+    <delete id="delete" parameterType="int">
+    DELETE FROM favfield
+    WHERE favno=#{favno}
+  </delete>
+</mapper> 

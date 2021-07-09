@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.ch.ChDAOInter"> 
+<!-- 등록 -->
+<insert id="create" parameterType="dev.mvc.ch.ChVO">
+  INSERT INTO ch(chgrpno,chtitle,chex,rdate)
+    VALUES( #{chgrpno},#{chtitle},#{chex},now())
+  </insert>
+  
+     <!-- 목록 -->
+    <select id="list_all" resultType="dev.mvc.ch.ChVO">
+    SELECT chno,chgrpno,chtitle,rdate
+    FROM ch
+    ORDER BY chno ASC
+  </select>
+  
+     <!-- 카테고리 그룹별 목록 -->
+  <select id="list_by_chgrpno" resultType="dev.mvc.ch.ChVO" parameterType="int">
+  SELECT chno,chgrpno,chtitle,chex,rdate
+  FROM ch
+  WHERE chgrpno = #{chgrpno}
+  ORDER BY chno ASC;
+  </select>
+    
+  <!--chinesegrp + ch join, 연결 목록 -->
+  <select id="list_all_join" resultType="dev.mvc.ch.Chinesegrp_ChVO">
+  SELECT r.chgrpno as r_chgrpno,r.chfield AS r_chfield,
+           c.chno, c.chgrpno,c.chtitle, c.chex, c.rdate
+  FROM chinesegrp r, ch c
+  WHERE r.chgrpno = c.chno
+  ORDER BY chgrpno ASC, chno ASC;
+  </select>
+    <!-- 조회, id: read, 입력: favno, 리턴: ChVO -->
+  <select id="read" resultType="dev.mvc.ch.ChVO" parameterType="int">
+    SELECT chno,chgrpno,chtitle,chex,rdate
+    FROM ch
+    WHERE chno=#{chno}
+  </select>
+ 
+   <!-- 수정, id: update, 입력: FavfieldVO, 리턴: int -->
+   <update id="update" parameterType="dev.mvc.ch.ChVO">
+   UPDATE ch
+   SET chtitle=#{chtitle},chex=#{chex},chgrpno=#{chgrpno}
+   WHERE chno=#{chno}
+  </update> 
+  
+    <delete id="delete" parameterType="int">
+    DELETE FROM ch
+    WHERE chno=#{chno}
+    </delete>
+    
+       <!-- 특정 그룹에 속한 레코드 갯수 산출 -->
+  <select id="count_by_chgrpno" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM ch 
+    WHERE chgrpno=#{chgrpno}
+  </select> 
+  
+  <!-- categrpno가 같은 모든 레코드 삭제 -->
+  <delete id="delete_by_chgrpno" parameterType="int">
+    DELETE FROM ch
+    WHERE chgrpno=#{chgrpno}
+  </delete> 
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.favfieldgrp.FavfieldgrpDAOInter"> 
+<!-- 등록 -->
+<insert id="create" parameterType="dev.mvc.favfieldgrp.FavfieldgrpVO">
+    INSERT INTO favfieldgrp(favgrptitle,rdate)
+    VALUES( #{favgrptitle},now())
+  </insert>
+  <!-- 목록 -->
+    <select id="list_favgrpno_asc" resultType="dev.mvc.favfieldgrp.FavfieldgrpVO">
+    SELECT favgrpno,favgrptitle,rdate
+    FROM favfieldgrp
+    ORDER BY favgrpno ASC
+  </select>
+  
+  <!-- 조회, id: read, 입력: favgrpno, 리턴: FavfieldgrpVO -->
+  <select id="read" resultType="dev.mvc.favfieldgrp.FavfieldgrpVO" parameterType="int">
+    SELECT favgrpno,favgrptitle,rdate
+    FROM favfieldgrp
+    WHERE favgrpno=#{favgrpno}
+  </select>
+  
+    <!-- 수정, id: update, 입력: FavfieldgrpVO, 리턴: int -->
+  <update id="update" parameterType="dev.mvc.favfieldgrp.FavfieldgrpVO">
+    UPDATE favfieldgrp
+    SET favgrptitle=#{favgrptitle}
+    WHERE favgrpno = #{favgrpno}
+  </update>
+  
+    <!-- 삭제 처리, id=delete, 입력: PK, 리턴: 삭제된 갯수 int -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM favfieldgrp
+    WHERE favgrpno=#{favgrpno}
+  </delete>
+</mapper> 
